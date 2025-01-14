@@ -14,9 +14,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardDTO {
+  // long이 아니고 Long으로 해줘야함. 
+  // long은 null 할당이 불가해서 초기화할 때 null 넣어주면 에러
+  // wrapper class: null 가능
   private Long bno;
   private String title;
   private String content;
   private String writer;
   private Date regdate;
+  private Date updatedate;
 }
