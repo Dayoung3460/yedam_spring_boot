@@ -11,6 +11,7 @@ This repository contains a collection of exercises and practice code written in 
 - **Thymeleaf**: Template engine for rendering views.
 - **JUnit**: Testing framework for unit and integration tests.
 - **Maven**: Build automation tool.
+- **Lombok**: A Java library that helps reduce boilerplate code.
 
 ## Purpose
 
@@ -21,18 +22,10 @@ The main goal of this repository is to practice and experiment with the followin
 - **Security**: Basic authentication and authorization with Spring Security.
 - **Testing**: Writing unit and integration tests for Spring Boot applications.
 
-## How to Run the Code
-
 ### Prerequisites
 
 Make sure you have the following installed:
 
-- Java 11 or newer
+- Java 21
 - Maven
 - A suitable IDE (IntelliJ IDEA, Eclipse, etc.)
-
-### Running the Application
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Dayoung3460/yedam_spring_boot.git
