@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,13 +45,40 @@
             </tbody>
         </table>
 <!--/*        <a th:href="@{remove(bno=${board.bno})}"><button class="btn btn-danger btn-md w-100">Delete</button></a>*/-->
+        <!-- paging start -->
+        <nav class="mt-2">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${paging.startPage} == 1 ? disabled">
+                    <a class="page-link" th:href="|javascript:gopage(${paging.startPage}-1)|">Previous</a>
+                </li>
+<!--#으로 시작하는거: 자바 내장 객체-->
+<!--                /*-->
+<!--                * Create a sequence (array) of integer numbers going from x to y-->
+<!--                */-->
+<!--                ${#numbers.sequence(from,to)}-->
+<!--                ${#numbers.sequence(from,to,step)}-->
+                <li th:each="num : *{#numbers.sequence(paging.startPage, paging.endPage)}"
+                    class="page-item"
+                    th:addclass="${num} == ${paging.page} ? active">
+                    <a class="page-link" th:href="|javascript:gopage(${num})|" th:text="${num}">2</a>
+                </li>
+
+                <li class="page-item" th:classappend="${paging.endPage} > ${paging.lastPage} ? disabled">
+                    <a class="page-link" th:href="|javascript:gopage(${paging.endPage}+1)|">Next</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- paging end -->
     </div>
 
     <script th:inline="javascript">
-        console.log(111)
         let result = [[${result}]]
         if(result) {
             alert("등록완료");
+        }
+
+        function gopage(pageNum) {
+            location.href = "list?page=" + pageNum
         }
     </script>
 

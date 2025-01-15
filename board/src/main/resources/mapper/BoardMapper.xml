@@ -65,15 +65,20 @@
     </select>
 
     <select id="getList" resultType="BoardDTO">
-        SELECT bno,
-               title,
-               content,
-               writer,
-               regdate
-        FROM tbl_board
-        <![CDATA[
-            WHERE bno > 0
-        ]]>
+        SELECT BNO, TITLE, WRITER, TITLE, REGDATE
+            FROM (
+                select /*+index_desc(TBL_BOARD PK_BOARD)*/ ROWNUM RN, BNO, TITLE, WRITER, REGDATE
+                from tbl_board
+                <![CDATA[
+                WHERE ROWNUM <= #{end}
+                ]]>
+            )
+        WHERE RN > #{start}
+    </select>
+
+    <!-- 카운트 -->
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM TBL_BOARD
     </select>
 </mapper>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,20 +11,23 @@
     <h2 class="text-center mb-4">Create a New Post</h2>
 
     <!-- Form Start -->
-    <form action="/board/register" method="post">
+    <form class="needs-validation" novalidate action="/board/register" method="post">
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
+            <input type="text" th:value="${boardDTO.title}" class="form-control" id="title" name="title" placeholder="Enter title" required>
+            <div class="error text-danger" th:errors="${boardDTO.title}">Please enter title</div>
         </div>
 
         <div class="mb-3">
             <label for="content" class="form-label">Content</label>
-            <textarea class="form-control" id="content" name="content" rows="4" placeholder="Enter content" required></textarea>
+            <textarea class="form-control" th:value="${boardDTO.content}" id="content" name="content" rows="4" placeholder="Enter content" required></textarea>
+            <div class="error text-danger" th:errors="${boardDTO.content}">Please enter content</div>
         </div>
 
         <div class="mb-3">
             <label for="writer" class="form-label">Writer</label>
-            <input type="text" class="form-control" id="writer" name="writer" placeholder="Enter writer's name" required>
+            <input type="text" th:value="${boardDTO.writer}" class="form-control" id="writer" name="writer" placeholder="Enter writer's name" required>
+            <div class="error text-danger" th:errors="${boardDTO.writer}">Please enter writer</div>
         </div>
         <button type="submit" class="btn btn-primary w-100 mb-2">Submit</button>
     </form>
@@ -33,6 +36,28 @@
         <button class="btn btn-warning w-100">Back</button>
     </a>
 </div>
+<!--<script th:inline="javascript">-->
+<!--    (function () {-->
+<!--        'use strict'-->
+
+<!--// Fetch all the forms we want to apply custom Bootstrap validation styles to-->
+<!--        var forms = document.querySelectorAll('.needs-validation')-->
+
+<!--// Loop over them and prevent submission-->
+<!--        Array.prototype.slice.call(forms)-->
+<!--            .forEach(function (form) {-->
+<!--                form.addEventListener('submit', function (event) {-->
+<!--                    if (!form.checkValidity()) {-->
+<!--                        event.preventDefault()-->
+<!--                        event.stopPropagation()-->
+<!--                    }-->
+
+<!--                    form.classList.add('was-validated')-->
+<!--                }, false)-->
+<!--            })-->
+<!--    })()-->
+<!--</script>-->
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>

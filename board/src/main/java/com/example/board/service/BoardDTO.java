@@ -1,5 +1,6 @@
 package com.example.board.service;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +19,11 @@ public class BoardDTO {
   // long은 null 할당이 불가해서 초기화할 때 null 넣어주면 에러
   // wrapper class: null 가능
   private Long bno;
+  @NotBlank
   private String title;
+  @NotBlank
   private String content;
+  @NotBlank
   private String writer;
   private Date regdate;
   private Date updatedate;

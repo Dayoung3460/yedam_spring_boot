@@ -2,6 +2,7 @@ package com.example.board;
 
 import com.example.board.service.BoardDTO;
 import com.example.board.mapper.BoardMapper;
+import com.example.board.service.BoardSearchDTO;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -25,9 +26,12 @@ public class BoardMapperTests {
   @DisplayName("게시글전체조회")
   public void testGetList() {
     //given
+    BoardSearchDTO search = new BoardSearchDTO();
+    search.setStart(1);
+    search.setEnd(10);
     
     //when
-    List<BoardDTO> list = mapper.getList();
+    List<BoardDTO> list = mapper.getList(search);
     
     //then
     list.forEach((board) -> log.info(String.valueOf(board)));

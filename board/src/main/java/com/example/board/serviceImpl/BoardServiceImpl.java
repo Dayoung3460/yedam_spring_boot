@@ -2,6 +2,7 @@ package com.example.board.serviceImpl;
 
 import com.example.board.mapper.BoardMapper;
 import com.example.board.service.BoardDTO;
+import com.example.board.service.BoardSearchDTO;
 import com.example.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,12 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public List<BoardDTO> getList() {
-    return boardMapper.getList();
+  public List<BoardDTO> getList(BoardSearchDTO searchDTO) {
+    return boardMapper.getList(searchDTO);
+  }
+  
+  @Override
+  public int count(BoardSearchDTO searchDTO) {
+    return boardMapper.count(searchDTO);
   }
 }

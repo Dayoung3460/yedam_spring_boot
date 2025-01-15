@@ -1,6 +1,8 @@
 package com.example.board.controller;
 
+import com.example.board.common.Paging;
 import com.example.board.service.BoardDTO;
+import com.example.board.service.BoardSearchDTO;
 import com.example.board.service.BoardService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -39,13 +43,19 @@ public class BoardController {
   }
   
   @GetMapping("/register")
-  public void register() {	}
+  public void register(BoardDTO board) {	}
 
   @PostMapping("/register")
   // RedirectAttributes: 리다이렉트 뷰로 데이터 전달하기 위해 사용
   // data 임시 저장하고 리다이렉트되는 url에서 데이터 받을 수 있음
-  public String register(BoardDTO board, RedirectAttributes rttr) {
+  public String register(@Validated BoardDTO board,
+                         BindingResult bindingResult,
+                         RedirectAttributes rttr) {
 
+    if(bindingResult.hasErrors()) {
+      return "/board/register";
+    }
+    
     log.info("register={}", board);
 
     // 서비스 구현체의 메서드를 실행함
@@ -87,8 +97,16 @@ public class BoardController {
 
 
   @GetMapping("/list")
-  public void list(Model model) {
+  public void list(Model model, BoardSearchDTO searchDTO, Paging paging) {
     log.info("list");
-    model.addAttribute("list", service.getList());
+    
+    paging.setPageUnit(10);
+    paging.setTotalRecord(service.count(searchDTO));
+    
+    searchDTO.setStart(paging.getFirst());
+    searchDTO.setEnd(paging.getLast());
+    
+    // searchDTO, paging 의 값들도 model에 들어있음
+    model.addAttribute("list", service.getList(searchDTO));
   }
 }
