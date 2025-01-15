@@ -7,8 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 public interface BoardMapper {
-  
-  // start, end 값 쿼리로 넘겨줘야함
   List<BoardDTO> getList(BoardSearchDTO searchDTO);
   
   int insert(BoardDTO board);

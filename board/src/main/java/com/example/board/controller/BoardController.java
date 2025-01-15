@@ -48,10 +48,14 @@ public class BoardController {
   @PostMapping("/register")
   // RedirectAttributes: 리다이렉트 뷰로 데이터 전달하기 위해 사용
   // data 임시 저장하고 리다이렉트되는 url에서 데이터 받을 수 있음
+  // @Validated: BoardDTO에서 @NotBlank 설정해둬서 유효성 검사를 함
+  // 그 결과가 바로 bindingResult로 들어감
+  // 파라미터 순서가 @Validated 다음에 바로 BindingResult가 와야함
   public String register(@Validated BoardDTO board,
                          BindingResult bindingResult,
                          RedirectAttributes rttr) {
 
+    // 값 세개(title, content, writer) 중 하나라도 빈 값으로 넘어오면 에러에 걸림
     if(bindingResult.hasErrors()) {
       return "/board/register";
     }
@@ -100,13 +104,19 @@ public class BoardController {
   public void list(Model model, BoardSearchDTO searchDTO, Paging paging) {
     log.info("list");
     
-    paging.setPageUnit(10);
+//    paging.setPageUnit(10);
     paging.setTotalRecord(service.count(searchDTO));
     
     searchDTO.setStart(paging.getFirst());
     searchDTO.setEnd(paging.getLast());
+//    searchDTO.setPageUnit(paging.getPageUnit());
     
     // searchDTO, paging 의 값들도 model에 들어있음
+    // list page에서는 boardSearchDTO 변수로 넘어감. 커맨드객체에서 첫글자만 소문자로
+    //  --> Spring MVC에서 메소드의 파라미터로 전달된 객체들이 자동으로 모델에 추가됨
+    // --> @ModelAttribute 가 생략됐다고 생각하면 됨
+    
+    // Paging의 pageUnit 값이 boardSearchDTO에도 들어가있음
     model.addAttribute("list", service.getList(searchDTO));
   }
 }
