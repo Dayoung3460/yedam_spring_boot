@@ -1,11 +1,9 @@
 package com.example.board.controller;
 
-import com.example.board.common.Paging;
+import com.example.common.Paging;
 import com.example.board.service.BoardDTO;
 import com.example.board.service.BoardSearchDTO;
 import com.example.board.service.BoardService;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,8 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Slf4j
 @Controller

@@ -82,10 +82,11 @@
                 ]]>
                 <include refid="criteria"></include>
             )
-        WHERE RN >= #{start}
-    </select>
+    <!-- '<' 꺽새에만 cdata 지정해주면 됨 -->
+            WHERE RN >= #{start}
+        </select>
 
-    <!-- 카운트 -->
+        <!-- 카운트 -->
     <select id="count" resultType="int">
         SELECT COUNT(*) FROM TBL_BOARD
         <where>

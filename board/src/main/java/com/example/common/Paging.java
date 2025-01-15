@@ -1,4 +1,4 @@
-package com.example.board.common;
+package com.example.common;
 
 import lombok.Data;
 

@@ -11,6 +11,7 @@
     <h2 class="text-center mb-4">Board</h2>
 
     <!-- Form Start -->
+    <!--    board: 컨트롤러의 Model에서 던져주는 값 -->
     <form action="/board/modify" method="post" th:object="${board}">
         <input type="hidden" th:field="*{bno}" />
         <div class="mb-3">
