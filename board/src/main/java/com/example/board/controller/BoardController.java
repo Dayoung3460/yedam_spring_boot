@@ -115,8 +115,6 @@ public class BoardController {
     // list page에서는 boardSearchDTO 변수로 넘어감. 커맨드객체에서 첫글자만 소문자로
     //  --> Spring MVC에서 메소드의 파라미터로 전달된 객체들이 자동으로 모델에 추가됨
     // --> @ModelAttribute 가 생략됐다고 생각하면 됨
-    
-    // Paging의 pageUnit 값이 boardSearchDTO에도 들어가있음
     model.addAttribute("list", service.getList(searchDTO));
   }
 }

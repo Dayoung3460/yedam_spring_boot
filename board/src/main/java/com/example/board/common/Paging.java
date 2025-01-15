@@ -11,11 +11,10 @@ public class Paging {
   Integer page = 1;	  //현재 페이지
   int startPage;  //페이지그룹내에서 시작페이지번호
   int endPage;  //페이지그룹내에서 마지막페이지번호
-  int first;// BoardSearchDTO로 넘겨줄 페이지그룹의 시작번호
-  int last;//BoardSearchDTO로 넘겨줄 페이지그룹의 마지막번호
+  int first;// BoardSearchDTO로 넘겨줄 페이지그룹 내의 첫번째 rownum
+  int last;//BoardSearchDTO로 넘겨줄 페이지그룹 내의 마지막 rownum
   
   public int getFirst() {
-    // (5 - 1) * 10 + 1 = 41
     first = (getPage() - 1) * getPageUnit() + 1;
     return first;
   }
