@@ -64,16 +64,63 @@
         WHERE bno = #{bno}
     </select>
 
+    <!--
+     * hint
+      - oracle optimizer에게 sql문 실행을 위한 데이터를 스캐닝하는 경로, 조인하는 방법 등을 알려주기 위해
+      - 직접 최적의 실행 경로를 알려주는거임
+      - 힌트는 오타가 있으면 걍 무시됨. 에러안남.
+      -  /*+index_desc(table_name index_name)*/
+       -> 지정된 index를 내림차순으로 쓰게끔 지정
+     -->
     <select id="getList" resultType="BoardDTO">
-        SELECT bno,
-               title,
-               content,
-               writer,
-               regdate
-        FROM tbl_board
-        <![CDATA[
-            WHERE bno > 0
-        ]]>
+        SELECT BNO, TITLE, WRITER, TITLE, REGDATE
+            FROM (
+                select /*+index_desc(TBL_BOARD PK_BOARD)*/ ROWNUM RN, BNO, TITLE, WRITER, REGDATE
+                from tbl_board
+                <![CDATA[
+                    WHERE ROWNUM <= #{end}
+                ]]>
+                <include refid="criteria"></include>
+            )
+    <!-- '<' 꺽새에만 cdata 지정해주면 됨 -->
+            WHERE RN >= #{start}
+        </select>
+
+        <!-- 카운트 -->
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM TBL_BOARD
+        <where>
+            <include refid="criteria"></include>
+        </where>
     </select>
+    <sql id="criteria">
+        <if test="keyword != null and !keyword.equals('')">
+            <!--prefixOverrides="or" : 젤 첨의 or 생략하도록-->
+            <trim prefix="and (" suffix=")" prefixOverrides="or">
+                <!--
+                    MyBatis에서 Java 객체의 메소드를 통해 값을 가져올 수 있음
+                    BoardSearchDTO에 typeArr 라는 필드가 없어도 메소드의 반환값 데이터 타입을 보고 값을 가지고옴
+                    getTypeArr()의 반환값을 typeArr에 넣어줌
+                -->
+                <foreach item="type" collection="typeArr">
+                    <!-- choose when 절에 앞에 or 이 붙음-->
+                    <trim prefix="or">
+                        <choose>
+                            <when test="type == 'T'">
+                                title like '%' || #{keyword} || '%'
+                            </when>
+                            <when test="type == 'C'">
+                                content like '%' || #{keyword} || '%'
+                            </when>
+                            <when test="type == 'W'">
+                                writer like '%' || #{keyword} || '%'
+                            </when>
+                        </choose>
+                    </trim>
+                </foreach>
+            </trim>
+
+        </if>
+    </sql>
 </mapper>
 

@@ -1,18 +1,18 @@
 package com.example.board.controller;
 
+import com.example.common.Paging;
 import com.example.board.service.BoardDTO;
+import com.example.board.service.BoardSearchDTO;
 import com.example.board.service.BoardService;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -39,13 +39,23 @@ public class BoardController {
   }
   
   @GetMapping("/register")
-  public void register() {	}
+  public void register(BoardDTO board) {	}
 
   @PostMapping("/register")
   // RedirectAttributes: 리다이렉트 뷰로 데이터 전달하기 위해 사용
   // data 임시 저장하고 리다이렉트되는 url에서 데이터 받을 수 있음
-  public String register(BoardDTO board, RedirectAttributes rttr) {
+  // @Validated: BoardDTO에서 @NotBlank 설정해둬서 유효성 검사를 함
+  // 그 결과가 바로 bindingResult로 들어감
+  // 파라미터 순서가 @Validated 다음에 바로 BindingResult가 와야함
+  public String register(@Validated BoardDTO board,
+                         BindingResult bindingResult,
+                         RedirectAttributes rttr) {
 
+    // 값 세개(title, content, writer) 중 하나라도 빈 값으로 넘어오면 에러에 걸림
+    if(bindingResult.hasErrors()) {
+      return "/board/register";
+    }
+    
     log.info("register={}", board);
 
     // 서비스 구현체의 메서드를 실행함
@@ -87,8 +97,20 @@ public class BoardController {
 
 
   @GetMapping("/list")
-  public void list(Model model) {
+  public void list(Model model, BoardSearchDTO searchDTO, Paging paging) {
     log.info("list");
-    model.addAttribute("list", service.getList());
+    
+//    paging.setPageUnit(10);
+    paging.setTotalRecord(service.count(searchDTO));
+    
+    searchDTO.setStart(paging.getFirst());
+    searchDTO.setEnd(paging.getLast());
+//    searchDTO.setPageUnit(paging.getPageUnit());
+    
+    // searchDTO, paging 의 값들도 model에 들어있음
+    // list page에서는 boardSearchDTO 변수로 넘어감. 커맨드객체에서 첫글자만 소문자로
+    //  --> Spring MVC에서 메소드의 파라미터로 전달된 객체들이 자동으로 모델에 추가됨
+    // --> @ModelAttribute 가 생략됐다고 생각하면 됨
+    model.addAttribute("list", service.getList(searchDTO));
   }
 }

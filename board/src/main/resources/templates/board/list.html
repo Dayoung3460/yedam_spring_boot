@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Board List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        form {
+            background-color: beige;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+
 </head>
 <body>
     <div class="container my-5">
@@ -12,6 +21,43 @@
         <a href="register">
             <button class="btn btn-primary btn-md mb-2">Write</button>
         </a>
+        <form name="searchForm" action="/board/list" method="get" th:object="${boardSearchDTO}">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <label for="inputState"></label>
+                    <select id="inputState" class="form-control" th:field="*{type}">
+                        <option selected value="">Choose..</option>
+                        <option value="T">Title</option>
+                        <option value="C">Content</option>
+                        <option value="W">Writer</option>
+                        <option value="TC">Title or Content</option>
+                        <option value="TW">Title or Writer</option>
+                        <option value="TWC">Title or Writer or Content</option>
+                    </select>
+                    <input type="hidden" name="page" value="1"/>
+
+                </div>
+                <div class="col-auto">
+                    <label for="inputZip"></label>
+                    <input type="text" class="form-control" id="inputZip" th:field="*{keyword}" placeholder="Keyword"/>
+                    <label>
+                        <!--
+                            option 에서 값 선택하지 않으면 10이 디폴트값임.
+                            Search button submit할 때 pageUnit값이 10으로 넘어감
+                        -->
+                        <select class="form-control" th:field="*{pageUnit}">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="col-auto mt-4">
+                    <button type="submit" class="btn btn-info">Search</button>
+                </div>
+            </div>
+
+        </form>
         <table class="table table-bordered table-striped">
             <thead>
             <tr>
@@ -45,13 +91,41 @@
             </tbody>
         </table>
 <!--/*        <a th:href="@{remove(bno=${board.bno})}"><button class="btn btn-danger btn-md w-100">Delete</button></a>*/-->
+        <!-- paging start -->
+        <nav class="mt-2">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${paging.startPage} == 1 ? disabled">
+                    <a class="page-link" th:href="|javascript:gopage(${paging.startPage}-1)|">Previous</a>
+                </li>
+<!--#으로 시작하는거: 자바 내장 객체-->
+<!--                /*-->
+<!--                * Create a sequence (array) of integer numbers going from x to y-->
+<!--                */-->
+<!--                ${#numbers.sequence(from,to)}-->
+<!--                ${#numbers.sequence(from,to,step)}-->
+                <li th:each="num : *{#numbers.sequence(paging.startPage, paging.endPage)}"
+                    class="page-item"
+                    th:classappend="${num} == ${paging.page} ? active">
+                    <a class="page-link" th:href="|javascript:gopage(${num})|" th:text="${num}">2</a>
+                </li>
+
+                <li class="page-item" th:classappend="${paging.endPage} >= ${paging.lastPage} ? disabled">
+                    <a class="page-link" th:href="|javascript:gopage(${paging.endPage}+1)|">Next</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- paging end -->
     </div>
 
     <script th:inline="javascript">
-        console.log(111)
         let result = [[${result}]]
         if(result) {
             alert("등록완료");
+        }
+
+        function gopage(pageNum) {
+            searchForm.page.value = pageNum
+            searchForm.submit();
         }
     </script>
 
