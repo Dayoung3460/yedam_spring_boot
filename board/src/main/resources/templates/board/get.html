@@ -1,13 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Board</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script th:inline="javascript">
+        const bno = [[${board.bno}]]
+        window.addEventListener("DOMContentLoaded", () => {
+            let replies = document.querySelector(".replies")
+            getReply(replies)
+            deleteReply(replies)
+        })
+
+        function getReply(replies) {
+            const url = `/replies/pages/${bno}/1`
+            fetch(url).
+            then(result => result.json()).
+            then(result => addReplyEle(result, replies))
+        }
+
+
+        function addReplyEle(result, replies) {
+
+            result.list.forEach((reply) => {
+                const html = `
+                    <div class="row">
+                        <p>댓글번호: ${reply.rno} | 내용: ${reply.reply} | 댓글쓴사람: ${reply.replyer} | 날짜: ${reply.updatedate}<p>
+                        <button class="btn btn-danger delete-btn" data-rno="${reply.rno}">삭제</button>
+                    </div>`
+                replies.insertAdjacentHTML('beforeend', html)
+            })
+        }
+
+        function deleteReply(replies) {
+            replies.addEventListener('click', (e) => {
+                if(e.target.classList.contains("delete-btn")) {
+                    const rno = e.target.dataset.rno
+                    const url = `/replies/${rno}`
+                    fetch(url, {
+                        method: 'delete',
+                    })
+                        .then(result => result.text())
+                        .then(result => {
+                            replies.replaceChildren()
+                            getReply(replies)
+                        })
+                }
+            })
+        }
+    </script>
 </head>
 <body>
-<div class="container my-5">
+<div class="container my-5" layout:fragment="content">
     <h2 class="text-center mb-4">Board</h2>
 
     <!-- Form Start -->
@@ -33,6 +79,13 @@
         </div>
     </form>
     <!-- Form End -->
+
+    <hr/>
+    <h3 class="text-center my-4">Comment</h3>
+    <div class="card">
+        <div class="card-body replies">
+        </div>
+    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>

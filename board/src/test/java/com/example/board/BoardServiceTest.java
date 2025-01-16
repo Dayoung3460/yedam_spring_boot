@@ -1,7 +1,7 @@
 package com.example.board;
 
-import com.example.board.service.BoardDTO;
-import com.example.board.service.BoardService;
+import com.example.board.service.board.BoardDTO;
+import com.example.board.service.board.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,9 @@
 package com.example.board.serviceImpl;
 
 import com.example.board.mapper.BoardMapper;
-import com.example.board.service.BoardDTO;
-import com.example.board.service.BoardSearchDTO;
-import com.example.board.service.BoardService;
+import com.example.board.service.board.BoardDTO;
+import com.example.board.service.board.BoardSearchDTO;
+import com.example.board.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

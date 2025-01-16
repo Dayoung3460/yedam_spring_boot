@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.board.mapper.ReplyMapper">
+    <select id="getListByBno" resultType="ReplyDTO">
+        SELECT rno, bno, reply, replyer, replydate, updatedate
+        FROM tbl_reply
+        where bno = #{bno}
+        and rno > 0 <!-- rno 순서대로 정렬됨-->
+    </select>
+    <update id="modify">
+        UPDATE tbl_reply
+        SET
+            reply = #{reply},
+            replyer = #{replyer}
+        WHERE rno = #{rno}
+    </update>
+    <select id="getCountByBno" resultType="int">
+        select count(rno)
+        from tbl_reply
+        where bno = #{bno}
+    </select>
+    <select id="getList" resultType="ReplyDTO">
+        SELECT rno, bno, reply, replyer, replydate, updatedate
+        FROM tbl_reply
+        where bno = #{bno}
+        and rno > 0 <!-- rno 순서대로 정렬됨-->
+    </select>
+    <delete id="delete">
+        delete from tbl_reply
+        where rno = #{rno}
+    </delete>
+</mapper>
