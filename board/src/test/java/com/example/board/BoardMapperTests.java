@@ -1,9 +1,8 @@
 package com.example.board;
 
-import com.example.board.service.BoardDTO;
+import com.example.board.service.board.BoardDTO;
 import com.example.board.mapper.BoardMapper;
-import com.example.board.service.BoardSearchDTO;
-import lombok.Setter;
+import com.example.board.service.board.BoardSearchDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

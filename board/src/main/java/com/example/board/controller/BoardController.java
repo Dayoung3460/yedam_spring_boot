@@ -1,9 +1,9 @@
 package com.example.board.controller;
 
 import com.example.common.Paging;
-import com.example.board.service.BoardDTO;
-import com.example.board.service.BoardSearchDTO;
-import com.example.board.service.BoardService;
+import com.example.board.service.board.BoardDTO;
+import com.example.board.service.board.BoardSearchDTO;
+import com.example.board.service.board.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

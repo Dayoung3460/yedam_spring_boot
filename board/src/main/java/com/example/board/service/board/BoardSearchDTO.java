@@ -1,4 +1,4 @@
-package com.example.board.service;
+package com.example.board.service.board;
 
 import lombok.Data;
 
