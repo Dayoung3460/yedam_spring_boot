@@ -1,11 +1,13 @@
 package com.example.board.serviceImpl;
 
 import com.example.board.mapper.BoardMapper;
+import com.example.board.mapper.ReplyMapper;
 import com.example.board.service.board.BoardDTO;
 import com.example.board.service.board.BoardSearchDTO;
 import com.example.board.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 // bean 등록. 설정안해주면 No qualifying bean of type 에러남
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
   private final BoardMapper boardMapper;
+  private final ReplyMapper replyMapper;
   
   // BoardMapper를 주입받는 생성자
   // @RequiredArgsConstructor가 있어서 필요없음
@@ -36,7 +39,10 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
+  @Transactional // delete comments & post
   public boolean remove(Long bno) {
+    // commit when all methods are executed successfully
+    replyMapper.deleteByBno(bno);
     return boardMapper.delete(bno) > 0;
   }
 

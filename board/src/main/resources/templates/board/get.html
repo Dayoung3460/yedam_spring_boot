@@ -83,8 +83,8 @@
                   data-rno="${item.rno}"
                   class="btn btn-success btnReplyUpdateForm">수정</button>
           <button type="button"
-                  data-rno="${item.rno}"
-                  class="btn btn-danger btnReplyDelete">삭제</button>
+                  data-rno="${item.rno}" data-bno="${item.bno}"
+                  class="btn btn-danger btnReplyDelete delete-btn">삭제</button>
         </div>`;
             return tag;
         }
@@ -270,6 +270,10 @@
         <div class="mb-3">
             <label for="writer" class="form-label">Writer</label>
             <input type="text" th:field="*{writer}" readonly class="form-control" id="writer" placeholder="Enter writer's name" required>
+        </div>
+        <div>
+            <button type="button" class="btn btn-info">Edit</button>
+            <button type="button" class="btn btn-danger">Delete</button>
         </div>
     </form>
     <!-- Form End -->
