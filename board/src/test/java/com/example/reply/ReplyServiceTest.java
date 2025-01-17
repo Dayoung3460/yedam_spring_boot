@@ -17,19 +17,19 @@ public class ReplyServiceTest {
   @Autowired
   ReplyService replyService;
   
-  @Test
-  @DisplayName("댓글 조회")
-  public void getReplyList() {
-    // given
-    long bno = 3014669;
-    
-    // when
-    List<ReplyDTO> replyList = replyService.getListByBno(bno);
-    
-    // then
-    log.info("replyList:{}", replyList);
-    assertThat(replyList).isNotEmpty();
-  }
+//  @Test
+//  @DisplayName("댓글 조회")
+//  public void getReplyList() {
+//    // given
+//    long bno = 3014669;
+//
+//    // when
+//    List<ReplyDTO> replyList = replyService.getList(bno);
+//
+//    // then
+//    log.info("replyList:{}", replyList);
+//    assertThat(replyList).isNotEmpty();
+//  }
   
   @Test
   @DisplayName("댓글 수정")

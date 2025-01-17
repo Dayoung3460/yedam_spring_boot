@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ReplySearchDTO {
-  int page;
-  int amount; // 한페이지에 댓글 보여주는 개수
+  int page = 1;
+  int amount = 3; // 한페이지에 댓글 보여주는 개수
   
   // page group의 첫댓글 rownum
   public int getStart() {

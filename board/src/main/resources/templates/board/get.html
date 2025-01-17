@@ -9,33 +9,91 @@
     <script th:inline="javascript">
         const bno = [[${board.bno}]]
         window.addEventListener("DOMContentLoaded", () => {
-            let replies = document.querySelector(".replies")
-            getReply(replies)
-            deleteReply(replies)
+
+            getReplyList()
+            deleteReply()
+            replyUpdateForm(); //수정폼 버튼 이벤트 지정
+            replyCancel();     //취소 버튼 이벤트 지정
+            replyInsert();     //등록 버튼 이벤트 지정
+            editReply(); // 수정 저장 버튼 이벤트 등록
         })
 
-        function getReply(replies) {
-            const url = `/replies/pages/${bno}/1`
+        function getReplyList(page = 1) {
+            const url = `/replies/pages/${bno}/${page}`
             fetch(url).
             then(result => result.json()).
-            then(result => addReplyEle(result, replies))
+            then(result => addReplyEle(result))
         }
 
 
-        function addReplyEle(result, replies) {
-
+        function addReplyEle(result) {
+            let replies = document.querySelector(".replies")
+            replies.innerHTML = "";
             result.list.forEach((reply) => {
-                const html = `
-                    <div class="row">
-                        <p>댓글번호: ${reply.rno} | 내용: ${reply.reply} | 댓글쓴사람: ${reply.replyer} | 날짜: ${reply.updatedate}<p>
-                        <button class="btn btn-danger delete-btn" data-rno="${reply.rno}">삭제</button>
-                    </div>`
-                replies.insertAdjacentHTML('beforeend', html)
+                replies.insertAdjacentElement('beforeend', replyMake(reply))
             })
+
+            const div = document.querySelector('.replyPage');
+            div.innerHTML = pagingMake(result.paging)
         }
 
-        function deleteReply(replies) {
+        /*-------------------------------------
+페이지 번호 태그 만들기
+---------------------------------------*/
+        function pagingMake(paging){
+
+            let tag = `<ul class="pagination">`;
+
+            //이전버튼
+            if (paging.startPage > 1) {
+                tag += `<li class="page-item">
+		          <a class="page-link"
+		             href="javascript:getReplyList(${paging.startPage-1})">이전</a>
+		        </li>`
+            }
+
+            //페이지 번호
+            for(let i = paging.startPage; i<=paging.endPage; i++ ) {
+                tag+=`<li class="page-item">
+	            <a class="page-link"
+	              href="javascript:getReplyList(${i})">${i}</a>
+	          </li>`
+            }
+
+            //다음 버튼
+            if (paging.endPage < paging.lastPage ) {
+                tag += `<li class="page-item">
+	          <a class="page-link"
+	             href="javascript:getReplyList(${paging.endPage +1})">다음</a>
+	        </li>`
+            }
+            tag += `</ul>`
+
+            return tag;
+        }
+
+        function replyMake(item){
+            let tag = document.createElement("div");
+            tag.className = "row mt-2";
+            tag.innerHTML = `
+        <div class="col-6">${item.reply}</div>
+        <div class="col-3">${item.replyer}</div>
+        <div class="col-3">
+          <button type="button"
+                  data-rno="${item.rno}"
+                  class="btn btn-success btnReplyUpdateForm">수정</button>
+          <button type="button"
+                  data-rno="${item.rno}" data-bno="${item.bno}"
+                  class="btn btn-danger btnReplyDelete delete-btn">삭제</button>
+        </div>`;
+            return tag;
+        }
+
+        function deleteReply() {
+            let replies = document.querySelector(".replies")
             replies.addEventListener('click', (e) => {
+                // console.log(e.target) // 정확하게 클릭한 요소
+                // console.log(e.currentTarget) // replies 요소
                 if(e.target.classList.contains("delete-btn")) {
                     const rno = e.target.dataset.rno
                     const url = `/replies/${rno}`
@@ -45,10 +103,146 @@
                         .then(result => result.text())
                         .then(result => {
                             replies.replaceChildren()
-                            getReply(replies)
+                            getReplyList()
                         })
                 }
             })
+        }
+        /*-------------------------------------
+수정폼 버튼 이벤트 지정
+---------------------------------------*/
+        function replyUpdateForm(){
+            document.querySelector(".replies").addEventListener("click", function(){
+                //수정 폼 버튼이면
+                if(event.target.classList.contains("btnReplyUpdateForm")) {
+                    // 버튼을 포함하는 부모태그
+                    const div = event.target.closest(".row");
+
+                    // 수정할 데이터
+                    const rno = event.target.dataset.rno;
+                    const reply = div.children[0].innerHTML;
+                    const replyer = div.children[1].innerHTML;
+
+                    const item = {rno, reply, replyer};
+
+                    // 수정폼으로 변경
+                    div.replaceWith( replyFormMake(item) );
+                }
+            })
+        }
+
+
+        // 수정된 댓글 저장하기
+        function editReply() {
+            const replies = document.querySelector(".replies")
+            replies.addEventListener("click", (e) => {
+                if(e.target.classList.contains("btnReplyUpdate")) {
+                        const div = event.target.closest(".row")
+                        const reply = div.getElementsByClassName('reply')[0].value
+                        const replyer = div.getElementsByClassName('replyer')[0].value
+                        const param = {reply, replyer}
+
+                        const rno = e.target.dataset.rno
+
+                        const url = `/replies/${rno}`
+                        fetch(url, {
+                            method: 'put',
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body : JSON.stringify(param),
+                        })
+                            .then(result => result.text())
+                            .then(result => {
+                                if(Boolean(result)) {
+                                    replies.replaceChildren()
+                                    getReplyList()
+                                }
+                            })
+                }
+            })
+
+
+        }
+
+        /*-------------------------------------
+        수정폼 태그 생성
+        ---------------------------------------*/
+        function replyFormMake(item){
+            let tag = document.createElement("div");
+            tag.className = "replyUpdateForm row mt-2 border";
+            tag.innerHTML = `
+        <div class="col-6"><input class="reply" value="${item.reply}" data-value="${item.reply}"></div>
+        <div class="col-3"><input class="replyer" value="${item.replyer}" data-value="${item.replyer}"></div>
+        <div class="col-3">
+        <button type="button"
+                data-rno="${item.rno}"
+                class="btn btn-danger btnReplyCancel">취소</button>
+        <button type="button"
+            data-rno="${item.rno}"
+            class="btn btn-success btnReplyUpdate">저장</button>
+      </div>`;
+            return tag;
+        }
+
+        /*-------------------------------------
+        취소 버튼 이벤트 지정
+        ---------------------------------------*/
+        function replyCancel(){
+            document.querySelector(".replies").addEventListener("click", function(){
+                //수정 폼 버튼이면
+                if(event.target.classList.contains("btnReplyCancel")) {
+                    // 버튼을 포함하는 부모태그
+                    const div = event.target.closest(".row");
+
+                    // 수정할 데이터
+                    const rno = event.target.dataset.rno;
+                    const reply = div.querySelector("#reply").dataset.value;
+                    const replyer = div.querySelector("#replyer").dataset.value;
+
+                    const item = {rno, reply, replyer};
+
+                    // 수정폼으로 변경
+                    div.replaceWith( replyMake(item) );
+
+                } //end of if
+            }) // end of addEvent
+        } //end of function
+
+
+        /*-------------------------------------
+        등록 버튼 이벤트 지정
+        ---------------------------------------*/
+        function replyInsert(){
+            document.querySelector(".btnReplyInsert").addEventListener("click", function(){
+                const url = "/replies/new";
+
+                //파라미터 만들기
+                const reply = replyForm.reply.value;
+                const replyer = replyForm.replyer.value;
+                const param = {reply, replyer, bno}
+
+                //등록 요청
+                fetch(url, {
+                    method:"post",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body : JSON.stringify(param),
+                })
+                    .then( result => result.text() )
+                    .then( result => {
+                        if(Boolean(result)) {
+                            getReplyList()
+                            resetInput()
+                        }
+                    } )
+            })
+        }
+
+        function resetInput() {
+            // const cardHeader = document.getElementsByClassName('card-header')[0]
+            // cardHeader.get
         }
     </script>
 </head>
@@ -77,13 +271,37 @@
             <label for="writer" class="form-label">Writer</label>
             <input type="text" th:field="*{writer}" readonly class="form-control" id="writer" placeholder="Enter writer's name" required>
         </div>
+        <div>
+            <button type="button" class="btn btn-info">Edit</button>
+            <button type="button" class="btn btn-danger">Delete</button>
+        </div>
     </form>
     <!-- Form End -->
 
-    <hr/>
-    <h3 class="text-center my-4">Comment</h3>
-    <div class="card">
-        <div class="card-body replies">
+    <div class="card mt-4">
+        <div class="card-header">
+            <h2>Comment</h2>
+            <form name="replyForm">
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            <input name="reply" class="form-control" placeholder="Comment">
+                        </label>
+                    </div>
+                    <div class="col-3">
+                        <label>
+                            <input name="replyer" class="form-control" placeholder="Commenter">
+                        </label>
+                    </div>
+                    <div class="col-3">
+                        <button type="button" class="btn btn-success btnReplyInsert">등록</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-body replies"></div>
+        <div class="replyPage">
+
         </div>
     </div>
 </div>

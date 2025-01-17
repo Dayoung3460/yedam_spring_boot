@@ -69,6 +69,7 @@
                 <th scope="col">Date</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
+                <th scope="col">Comments</th>
             </tr>
             </thead>
             <tbody>
@@ -79,7 +80,7 @@
                     </label>
                 </th>
                 <th th:text="${board.bno}"></th>
-                <td th:text="${board.title}"></td>
+                <td th:text="|${board.title} [${board.replyCnt}]|"></td>
                 <td th:text="${board.writer}"></td>
                 <td th:text="${#dates.format(board.regdate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                 <td>
@@ -88,6 +89,7 @@
                 <td>
                     <a th:href="@{remove(bno=${board.bno})}"><button class="btn btn-danger btn-sm">Delete</button></a>
                 </td>
+                <td th:text="${board.replyCnt}"></td>
             </tr>
             </tbody>
         </table>

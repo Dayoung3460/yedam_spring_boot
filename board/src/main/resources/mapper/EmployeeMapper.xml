@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.hr.mapper.EmployeeMapper">
+    <select id="getList" resultType="EmployeeDTO">
+        SELECT
+            /*+index_desc(employees EMP_EMP_ID_PK)*/
+            employee_id,
+            first_name,
+            last_name,
+            email,
+            phone_number,
+            hire_date,
+            e.job_id,
+            salary,
+            commission_pct,
+            manager_id,
+            department_id,
+            (select job_title from jobs where job_id = e.job_id) job_title
+        FROM employees e
+    </select>
+
+    <!-- insert, update, delete resultType은 안적음. void나 int 둘 중하나. -->
+    <insert id="insert">
+        INSERT INTO employees (
+            employee_id,
+            first_name,
+            last_name,
+            email,
+            phone_number,
+            job_id,
+            department_id
+        )
+        VALUES (
+            seq_board.nextval,
+            #{employee.first_name},
+            #{employee.last_name},
+            #{employee.email}
+            #{employee.phone_number}
+            #{employee.job_id}
+            #{employee.department_id}
+               )
+    </insert>
+</mapper>

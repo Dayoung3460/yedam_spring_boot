@@ -59,7 +59,8 @@
                title,
                content,
                writer,
-               regdate
+               regdate,
+                replycnt
         FROM tbl_board
         WHERE bno = #{bno}
     </select>
@@ -73,9 +74,9 @@
        -> 지정된 index를 내림차순으로 쓰게끔 지정
      -->
     <select id="getList" resultType="BoardDTO">
-        SELECT BNO, TITLE, WRITER, TITLE, REGDATE
+        SELECT BNO, TITLE, WRITER, TITLE, REGDATE, replycnt
             FROM (
-                select /*+index_desc(TBL_BOARD PK_BOARD)*/ ROWNUM RN, BNO, TITLE, WRITER, REGDATE
+                select /*+index_desc(TBL_BOARD PK_BOARD)*/ ROWNUM RN, BNO, TITLE, WRITER, REGDATE, replycnt
                 from tbl_board
                 <![CDATA[
                     WHERE ROWNUM <= #{end}
@@ -93,6 +94,15 @@
             <include refid="criteria"></include>
         </where>
     </select>
+    <update id="updateReplyCnt">
+        update tbl_board
+        set replycnt = (
+            select count(bno)
+            from tbl_reply
+            where bno = #{bno}
+        )
+        where bno = #{bno}
+    </update>
     <sql id="criteria">
         <if test="keyword != null and !keyword.equals('')">
             <!--prefixOverrides="or" : 젤 첨의 or 생략하도록-->
