@@ -74,4 +74,6 @@ UPDATE tbl_reply
             replyer = "test"
         WHERE rno = 1;
 
+ALTER TABLE tbl_board ADD replycnt number(10) DEFAULT 0 NOT NULL;
+
 commit;
