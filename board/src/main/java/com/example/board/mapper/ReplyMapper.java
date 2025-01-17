@@ -7,11 +7,9 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface ReplyMapper {
-  List<ReplyDTO> getListByBno(Long bno);
-  
   boolean modify(ReplyDTO reply);
   
-  public int insert(ReplyDTO replyDTO);
+  public int register(ReplyDTO replyDTO);
   
   public int update(ReplyDTO replyDTO);
   

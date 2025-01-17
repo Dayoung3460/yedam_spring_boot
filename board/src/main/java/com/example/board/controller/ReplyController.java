@@ -22,11 +22,10 @@ public class ReplyController {
   
   //수정
   @PutMapping("{rno}")
-  public String modify(@RequestBody ReplyDTO replyDTO,
+  public Boolean modify(@RequestBody ReplyDTO replyDTO,
                        @PathVariable(name="rno") Long rno) {
     replyDTO.setRno(rno);
-    replyService.modify(replyDTO);
-    return "success";
+    return replyService.modify(replyDTO);
   }
   
   // 삭제
@@ -46,8 +45,14 @@ public class ReplyController {
   @GetMapping("pages/{bno}/{page}")
   public ReplyPageDTO getList(@PathVariable(name = "page") int page,
                               @PathVariable(name = "bno") Long bno) {
-    ReplySearchDTO replySearchDTO = new ReplySearchDTO(page, 10);
+    ReplySearchDTO replySearchDTO = new ReplySearchDTO(page, 3);
     return replyService.getList(replySearchDTO, bno);
+  }
+  
+  @PostMapping("new")
+  public Boolean register(@RequestBody ReplyDTO dto) {
+    log.info("new dto = {}", dto);
+    return replyService.register(dto) > 0;
   }
   
   
