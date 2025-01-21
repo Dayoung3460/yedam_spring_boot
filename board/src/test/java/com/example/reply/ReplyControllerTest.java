@@ -59,25 +59,26 @@ public class ReplyControllerTest {
   
   
   
-  //@Test
-//  @DisplayName("reply 단건 조회")
-//  void getreply() throws Exception {
-//
-//    //given
-//    Long rno = 2L;
-//    String url = "/replies/"+ rno;
-//
-//    //when
-//    mvc.perform(
-//        get(url).
-//          accept(MediaType.APPLICATION_JSON_VALUE)
-//      )
-//      //then
-//      .andExpect(status().isOk())
-//      .andExpect(jsonPath("$.reply").value("댓글수정"))
-//      .andDo(print())  ;
-//
-//  }
+  @Test
+  @DisplayName("reply 단건 조회")
+  void getreply() throws Exception {
+
+    //given
+    Long rno = 16L;
+    String url = "/replies/"+ rno;
+
+    //when
+    mvc.perform(
+        get(url).
+          accept(MediaType.APPLICATION_JSON_VALUE)
+      )
+      //then
+      .andExpect(status().isOk())
+      // 16번 댓글 조회했을 때 reply 값이 "1112345678" 맞는지 확인
+      .andExpect(jsonPath("$.reply").value("1112345678"))
+      .andDo(print());
+
+  }
   
 //  @Test
 //  @DisplayName("게시글의 reply 조회")
