@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body layout:fragment="content">
+<div class="container my-5">
+    <h2 class="text-center mb-4">도서 등록</h2>
+    <form class="needs-validation" novalidate action="/register" method="post">
+        <div class="mb-3">
+            <label for="bookNo" class="form-label">도서번호</label>
+            <input type="text" th:value="${bookDTO.bookNo}" class="form-control" id="bookNo" name="bookNo" readonly disabled>
+        </div>
+        <div class="mb-3">
+            <label for="bookName" class="form-label">도서명</label>
+            <input type="text" th:value="${bookDTO.bookName}" class="form-control" id="bookName" name="bookName">
+        </div>
+        <div class="mb-3">
+            <label for="bookCoverimg" class="form-label">도서표지</label>
+            <input type="text" th:value="${bookDTO.bookCoverimg}" class="form-control" id="bookCoverimg" name="bookCoverimg">
+        </div>
+        <div class="mb-3">
+            <label for="bookDate" class="form-label">출판일자</label>
+            <input type="Date" th:value="${bookDTO.bookDate}" class="form-control" id="bookDate" name="bookDate">
+        </div>
+        <div class="mb-3">
+            <label for="bookPrice" class="form-label">금액</label>
+            <input type="number" th:value="${bookDTO.bookPrice}" class="form-control" id="bookPrice" name="bookPrice">
+        </div>
+        <div class="mb-3">
+            <label for="bookPublisher" class="form-label">출판사</label>
+            <input type="text" th:value="${bookDTO.bookPublisher}" class="form-control" id="bookPublisher" name="bookPublisher">
+        </div>
+        <div class="mb-3">
+            <label for="bookInfo" class="form-label">도서소개</label>
+            <textarea class="form-control" th:value="${bookDTO.bookInfo}" id="bookInfo" name="bookInfo" rows="4"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mb-2">등록</button>
+        <button type="button" class="btn btn-primary w-100 mb-2" th:onclick="|location.href='list'|">조회</button>
+    </form>
+</div>
+
+<!--<script th:inline="javascript">-->
+<!--    let isRegistered = [[${isRegistered}]]-->
+<!--    console.log("isRegistered", isRegistered)-->
+<!--    if(isRegistered) {-->
+<!--        alert("도서등록이 완료되었습니다.");-->
+<!--    }-->
+<!--</script>-->
+</body>
+</html>
