@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/replies/")
+@RequestMapping("/replies/*")
 public class ReplyController {
   private final ReplyService replyService;
   
@@ -36,10 +36,11 @@ public class ReplyController {
   }
   
 //  // 단건조회
-//  @GetMapping("/{rno}")
-//  public ReplyDTO get(@PathVariable("rno") Long rno) {
-//    return replyService.get(rno);
-//  }
+  @GetMapping("/{rno}")
+  public ReplyDTO get(@PathVariable("rno") Long rno) {
+    log.info("replyService.get(rno): {}", replyService.get(rno));
+    return replyService.get(rno);
+  }
   
   // 목록조회
   @GetMapping("pages/{bno}/{page}")
