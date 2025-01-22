@@ -3,13 +3,10 @@ package com.example.jpa.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,6 +38,14 @@ public class CustomerRepositoryTest {
     Optional<Customer> result = customerRepository.findById(7L);
     Optional<Address> address = addressRepository.findById(1L);
     System.out.println("address = " + address);
+    // Optional객체인 result에서 값 꺼내올려면 get()
+    // but, 값이 없을 경우 예외 발생시키므로 get() 대신 orElse, orElseGet 활용하기
+    // orElse(): 값이 없으면 파라미터값 반환
+    // 아니면 
+    // if (optional.isPresent()) {
+    //    System.out.println(optional.get()); // World
+    //}
+    // 이런식으로
     assertThat(result.get().getName()).isEqualTo("da1");
   }
   

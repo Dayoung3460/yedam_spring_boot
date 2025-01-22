@@ -1,18 +1,22 @@
 package com.example.jpa.domain;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class Posts{
+// BaseTimeEntity에서 필드 두개(createdDate, modifiedDate) 넘어옴
+public class Posts extends BaseTimeEntity {
   
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -33,6 +37,7 @@ public class Posts{
     this.author = author;
   }
   
+  // update 쿼리 실행됨
   public void update(String title, String content) {
     this.title = title;
     this.content = content;
