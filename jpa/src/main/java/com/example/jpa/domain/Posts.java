@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class Posts extends BaseTimeEntity {
   
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
   
   @Column(length = 500, nullable = false)
